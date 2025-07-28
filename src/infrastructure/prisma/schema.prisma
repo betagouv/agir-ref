@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ActeurLVAO {
+  id                 String   @id
+  sources            String[]
+  nom                String?
+  nom_commercial     String?
+  siren              String?
+  siret              String?
+  description        String?
+  type_acteur        String?
+  url                String?
+  telephone          String?
+  adresse            String?
+  complement_adresse String?
+  code_postal        String?
+  ville              String?
+  latitude           Decimal?
+  longitude          Decimal?
+  labels             String[]
+  type_public        String?
+  reprise            String?
+  reprise_exclusif   Boolean?
+  sur_rdv            Boolean?
+  types_service      String[]
+  detail_services    Json     @default("{}")
+  date_derniere_maj  DateTime @db.Timestamptz(3)
+  emprunter          String[]
+  preter             String[]
+  louer              String[]
+  mettreenlocation   String[]
+  reparer            String[]
+  donner             String[]
+  trier              String[]
+  echanger           String[]
+  revendre           String[]
+  acheter            String[]
+  created_at         DateTime @default(now()) @db.Timestamptz(3)
+  updated_at         DateTime @default(now()) @updatedAt @db.Timestamptz(3)
+}

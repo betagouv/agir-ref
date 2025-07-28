@@ -1,0 +1,55 @@
+# compiled output
+/dist
+/node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# prisma 
+/src/infrastructure/prisma/stats/prisma_client_stats
+
+# other
+.env
+.env.test
+.env.run
+*wwo.json
+DOSSIER D’ARCHITECTURE TECHNIQUE.md
+log.txt
+static/images
+*.txt
+*.csv
+vscode.test.conf.json
+
+# Bruno collections
+
+.bruno/
