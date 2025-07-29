@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import fs from 'fs';
-import { ActeurLVAO, ActionLVAO } from '../domain/lvao/acteurLVAO';
+import { ActeurLVAO } from '../domain/lvao/acteurLVAO';
+import { ActionLVAO } from '../domain/lvao/actionLVAO';
 import { LabelLVAO } from '../domain/lvao/LabelLVAO';
 import { ObjetLVAO } from '../domain/lvao/objetLVAO';
 import { PublicLVAO } from '../domain/lvao/publicLVAO';
