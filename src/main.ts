@@ -18,7 +18,7 @@ async function bootstrap() {
     },
   };
   const config = new DocumentBuilder()
-    .setTitle(`cCmpagnon referentiel de l'application j'agis`)
+    .setTitle(`Referentiel Compagnon de l'application j'agis`)
     .setDescription(
       `Doc API executable, tous les endpoints sont testables en conditions réelles`,
     )
