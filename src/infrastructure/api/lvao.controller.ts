@@ -1,4 +1,4 @@
-import { Body, Controller, Put } from '@nestjs/common';
+import { Body, Controller, Put, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { LVAOUsecase } from '../../usecase/lvao.usecase';
 import { GenericControler } from './genericControler';
@@ -16,9 +16,11 @@ export class LVAOController extends GenericControler {
   @ApiBody({
     type: ActeurLVAO_API,
   })
-  async upsert_acteur(@Body() body: ActeurLVAO_API): Promise<void> {
-    console.log(body);
-
+  async upsert_acteur(
+    @Request() req,
+    @Body() body: ActeurLVAO_API,
+  ): Promise<void> {
+    this.checkCronAPIProtectedEndpoint(req);
     await this.lvao_usecase.upsert_acteur(body);
   }
 }
