@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import fs from 'fs';
-import { ActeurLVAO, ActionLVAO } from '../domain/lvao/ActeurLVAO';
+import { ActeurLVAO, ActionLVAO } from '../domain/lvao/acteurLVAO';
+import { LabelLVAO } from '../domain/lvao/LabelLVAO';
+import { ObjetLVAO } from '../domain/lvao/objetLVAO';
+import { PublicLVAO } from '../domain/lvao/publicLVAO';
+import { SourceLVAO } from '../domain/lvao/sourceLVAO';
+import { TypeActeurLVAO } from '../domain/lvao/typeActeurLVAO';
+import { TypeServiceLVAO } from '../domain/lvao/typeServiceLVAO';
+import { ActeurLVAO_API } from '../infrastructure/api/types/ActeurLVAOAPI';
 import { LVAORepository } from '../infrastructure/repository/lvao.repository';
 
 type LVAO_CSV_ROW = {
@@ -44,8 +51,8 @@ type LVAO_CSV_ROW = {
 export class LVAOUsecase {
   constructor(private lvaoRepository: LVAORepository) {}
 
-  public async upsert_acteur(acteur: ActeurLVAO): Promise<void> {
-    await this.lvaoRepository.upsert_acteur(acteur);
+  public async upsert_acteur(acteur: ActeurLVAO_API): Promise<void> {
+    await this.lvaoRepository.upsert_acteur(this.parse_acteur_API(acteur));
   }
 
   public async smart_load_csv_lvao(csvFilePath: string) {
@@ -80,40 +87,87 @@ export class LVAOUsecase {
 
   private parse_acteur_CSV(row: LVAO_CSV_ROW): ActeurLVAO {
     const result = new ActeurLVAO({
-      acheter: this.splitOrEmptyArray(row.acheter),
+      acheter: this.splitOrEmptyArray(row.acheter).map((e) => ObjetLVAO[e]),
       adresse: row.adresse,
       code_postal: row.code_postal,
       complement_adresse: row.complement_dadresse,
       date_derniere_maj: new Date(row.date_de_derniere_modification),
       description: row.description,
       detail_services: this.parsePropDeService(row.propositions_de_services),
-      donner: this.splitOrEmptyArray(row.donner),
-      echanger: this.splitOrEmptyArray(row.echanger),
-      emprunter: this.splitOrEmptyArray(row.emprunter),
+      donner: this.splitOrEmptyArray(row.donner).map((e) => ObjetLVAO[e]),
+      echanger: this.splitOrEmptyArray(row.echanger).map((e) => ObjetLVAO[e]),
+      emprunter: this.splitOrEmptyArray(row.emprunter).map((e) => ObjetLVAO[e]),
       id: row.identifiant,
-      labels: this.splitOrEmptyArray(row.qualites_et_labels),
+      labels: this.splitOrEmptyArray(row.qualites_et_labels).map(
+        (e) => LabelLVAO[e],
+      ),
       latitude: parseFloat(row.latitude),
       longitude: parseFloat(row.longitude),
-      louer: this.splitOrEmptyArray(row.louer),
-      mettreenlocation: this.splitOrEmptyArray(row.mettreenlocation),
+      louer: this.splitOrEmptyArray(row.louer).map((e) => ObjetLVAO[e]),
+      mettreenlocation: this.splitOrEmptyArray(row.mettreenlocation).map(
+        (e) => ObjetLVAO[e],
+      ),
       nom: row.nom,
       nom_commercial: row.nom_commercial,
-      preter: this.splitOrEmptyArray(row.preter),
-      reparer: this.splitOrEmptyArray(row.reparer),
+      preter: this.splitOrEmptyArray(row.preter).map((e) => ObjetLVAO[e]),
+      reparer: this.splitOrEmptyArray(row.reparer).map((e) => ObjetLVAO[e]),
       reprise: row.reprise,
       reprise_exclusif: row.exclusivite_de_reprisereparation !== 'f',
-      revendre: this.splitOrEmptyArray(row.revendre),
+      revendre: this.splitOrEmptyArray(row.revendre).map((e) => ObjetLVAO[e]),
       siren: row.siren,
       siret: row.siret,
-      sources: this.splitOrEmptyArray(row.paternite),
+      sources: this.splitOrEmptyArray(row.paternite).map((e) => SourceLVAO[e]),
       sur_rdv: row.uniquement_sur_rdv !== 'f',
       telephone: row.telephone,
-      trier: this.splitOrEmptyArray(row.trier),
-      type_acteur: row.type_dacteur,
-      type_public: row.public_accueilli,
-      types_service: this.splitOrEmptyArray(row.type_de_services),
+      trier: this.splitOrEmptyArray(row.trier).map((e) => ObjetLVAO[e]),
+      type_acteur: TypeActeurLVAO[row.type_dacteur],
+      type_public: PublicLVAO[row.public_accueilli],
+      types_service: this.splitOrEmptyArray(row.type_de_services).map(
+        (e) => TypeServiceLVAO[e],
+      ),
       url: row.site_web,
       ville: row.ville,
+    });
+
+    return result;
+  }
+
+  private parse_acteur_API(acteur: ActeurLVAO_API): ActeurLVAO {
+    const result = new ActeurLVAO({
+      acheter: acteur.acheter.map((e) => ObjetLVAO[e]),
+      adresse: acteur.adresse,
+      code_postal: acteur.code_postal,
+      complement_adresse: acteur.complement_adresse,
+      date_derniere_maj: new Date(acteur.date_derniere_maj),
+      description: acteur.description,
+      detail_services: acteur.detail_services,
+      donner: acteur.donner.map((e) => ObjetLVAO[e]),
+      echanger: acteur.echanger.map((e) => ObjetLVAO[e]),
+      emprunter: acteur.emprunter.map((e) => ObjetLVAO[e]),
+      id: acteur.id,
+      labels: acteur.labels.map((e) => LabelLVAO[e]),
+      latitude: acteur.latitude,
+      longitude: acteur.longitude,
+      louer: acteur.louer.map((e) => ObjetLVAO[e]),
+      mettreenlocation: acteur.mettreenlocation.map((e) => ObjetLVAO[e]),
+      nom: acteur.nom,
+      nom_commercial: acteur.nom_commercial,
+      preter: acteur.preter.map((e) => ObjetLVAO[e]),
+      reparer: acteur.reparer.map((e) => ObjetLVAO[e]),
+      reprise: acteur.reprise,
+      reprise_exclusif: acteur.reprise_exclusif,
+      revendre: acteur.revendre.map((e) => ObjetLVAO[e]),
+      siren: acteur.siren,
+      siret: acteur.siret,
+      sources: acteur.sources.map((e) => SourceLVAO[e]),
+      sur_rdv: acteur.sur_rdv,
+      telephone: acteur.telephone,
+      trier: acteur.trier.map((e) => ObjetLVAO[e]),
+      type_acteur: TypeActeurLVAO[acteur.type_acteur],
+      type_public: PublicLVAO[acteur.type_public],
+      types_service: acteur.types_service.map((e) => TypeServiceLVAO[e]),
+      url: acteur.url,
+      ville: acteur.ville,
     });
 
     return result;

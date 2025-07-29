@@ -1,4 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { LabelLVAO } from '../../../domain/lvao/LabelLVAO';
+import { ObjetLVAO } from '../../../domain/lvao/objetLVAO';
+import { PublicLVAO } from '../../../domain/lvao/publicLVAO';
+import { SourceLVAO } from '../../../domain/lvao/sourceLVAO';
+import { TypeActeurLVAO } from '../../../domain/lvao/typeActeurLVAO';
+import { TypeServiceLVAO } from '../../../domain/lvao/typeServiceLVAO';
 
 export class ActionLVAO_API {
   @ApiProperty() action: string;
@@ -7,13 +13,13 @@ export class ActionLVAO_API {
 
 export class ActeurLVAO_API {
   @ApiProperty() id: string;
-  @ApiProperty({ type: [String] }) sources: string[];
+  @ApiProperty({ enum: SourceLVAO, isArray: true }) sources: SourceLVAO[];
   @ApiProperty() nom: string;
   @ApiProperty() nom_commercial: string;
   @ApiProperty() siren: string;
   @ApiProperty() siret: string;
   @ApiProperty() description: string;
-  @ApiProperty() type_acteur: string;
+  @ApiProperty() type_acteur: TypeActeurLVAO;
   @ApiProperty() url: string;
   @ApiProperty() telephone: string;
   @ApiProperty() adresse: string;
@@ -22,22 +28,24 @@ export class ActeurLVAO_API {
   @ApiProperty() ville: string;
   @ApiProperty() latitude: number;
   @ApiProperty() longitude: number;
-  @ApiProperty({ type: [String] }) labels: string[];
-  @ApiProperty() type_public: string;
+  @ApiProperty({ enum: LabelLVAO, isArray: true }) labels: LabelLVAO[];
+  @ApiProperty() type_public: PublicLVAO;
   @ApiProperty() reprise: string;
   @ApiProperty() reprise_exclusif: boolean;
   @ApiProperty() sur_rdv: boolean;
-  @ApiProperty({ type: [String] }) types_service: string[];
+  @ApiProperty({ enum: TypeServiceLVAO, isArray: true })
+  types_service: TypeServiceLVAO[];
   @ApiProperty({ type: [ActionLVAO_API] }) detail_services: ActionLVAO_API[];
   @ApiProperty() date_derniere_maj: Date;
-  @ApiProperty({ type: [String] }) emprunter: string[];
-  @ApiProperty({ type: [String] }) preter: string[];
-  @ApiProperty({ type: [String] }) louer: string[];
-  @ApiProperty({ type: [String] }) mettreenlocation: string[];
-  @ApiProperty({ type: [String] }) reparer: string[];
-  @ApiProperty({ type: [String] }) donner: string[];
-  @ApiProperty({ type: [String] }) trier: string[];
-  @ApiProperty({ type: [String] }) echanger: string[];
-  @ApiProperty({ type: [String] }) revendre: string[];
-  @ApiProperty({ type: [String] }) acheter: string[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true }) emprunter: ObjetLVAO[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true }) preter: ObjetLVAO[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true }) louer: ObjetLVAO[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true })
+  mettreenlocation: ObjetLVAO[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true }) reparer: ObjetLVAO[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true }) donner: ObjetLVAO[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true }) trier: ObjetLVAO[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true }) echanger: ObjetLVAO[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true }) revendre: ObjetLVAO[];
+  @ApiProperty({ enum: ObjetLVAO, isArray: true }) acheter: ObjetLVAO[];
 }

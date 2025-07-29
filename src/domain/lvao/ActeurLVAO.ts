@@ -1,3 +1,10 @@
+import { LabelLVAO } from './LabelLVAO';
+import { ObjetLVAO } from './objetLVAO';
+import { PublicLVAO } from './publicLVAO';
+import { SourceLVAO } from './sourceLVAO';
+import { TypeActeurLVAO } from './typeActeurLVAO';
+import { TypeServiceLVAO } from './typeServiceLVAO';
+
 export class ActionLVAO {
   action: string;
   sous_categfories: string[];
@@ -5,13 +12,13 @@ export class ActionLVAO {
 
 export class ActeurLVAO {
   id: string;
-  sources: string[];
+  sources: SourceLVAO[];
   nom: string;
   nom_commercial: string;
   siren: string;
   siret: string;
   description: string;
-  type_acteur: string;
+  type_acteur: TypeActeurLVAO;
   url: string;
   telephone: string;
   adresse: string;
@@ -20,24 +27,24 @@ export class ActeurLVAO {
   ville: string;
   latitude: number;
   longitude: number;
-  labels: string[];
-  type_public: string;
+  labels: LabelLVAO[];
+  type_public: PublicLVAO;
   reprise: string;
   reprise_exclusif: boolean;
   sur_rdv: boolean;
-  types_service: string[];
+  types_service: TypeServiceLVAO[];
   detail_services: ActionLVAO[];
   date_derniere_maj: Date;
-  emprunter: string[];
-  preter: string[];
-  louer: string[];
-  mettreenlocation: string[];
-  reparer: string[];
-  donner: string[];
-  trier: string[];
-  echanger: string[];
-  revendre: string[];
-  acheter: string[];
+  emprunter: ObjetLVAO[];
+  preter: ObjetLVAO[];
+  louer: ObjetLVAO[];
+  mettreenlocation: ObjetLVAO[];
+  reparer: ObjetLVAO[];
+  donner: ObjetLVAO[];
+  trier: ObjetLVAO[];
+  echanger: ObjetLVAO[];
+  revendre: ObjetLVAO[];
+  acheter: ObjetLVAO[];
 
   constructor(acteur: ActeurLVAO) {
     Object.assign(this, acteur);

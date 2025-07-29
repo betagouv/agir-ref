@@ -1,0 +1,408 @@
+{
+  "type": "object",
+  "required": [],
+  "properties": {
+    "identifiant": {
+      "x-originalName": "Identifiant",
+      "type": "string",
+      "description": "Identifiant unique de chaque ligne du fichier",
+      "x-cardinality": 285526
+    },
+    "paternite": {
+      "x-originalName": "Paternité",
+      "type": "string",
+      "title": "",
+      "x-capabilities": {
+        "textAgg": false
+      },
+      "maxLength": 200,
+      "description": "Cette colonne reflète la source de la donnée. Dans le cadre de la licence ouverte 2.0, il est nécessaire de conserver et afficher le contenu de cette colonne pour toute réutilisation, afin de d'assurer la paternité.",
+      "x-cardinality": 47,
+      "examples": [
+        "ADEME",
+        "Longue Vie Aux Objets",
+        "CITEO",
+        "REFASHION",
+        "ALIAPUR",
+        "COREPILE - ECOSYSTEM",
+        "Batribox",
+        "Bibliothèques - Ministère de la culture",
+        "ECOSYSTEM",
+        "ECOLOGIC",
+        "ECOMAISON",
+        "ECODDS",
+        "ADEME - SINOE - Déchèteries",
+        "OCAB - Ecominero",
+        "OCAB - Valobat",
+        "ADEME - SINOE",
+        "Ecologic & Ecosystem",
+        "OCAB - Ecomaison",
+        "OCAB - Valdelia",
+        "Adresse ajoutée de manière collaborative par la communauté UNIQUE",
+        "Communauté Longue Vie Aux Objets",
+        "CYCLEVIA",
+        "Planète Liège - Fédération Française du Liège",
+        "ADEME - Locations",
+        "Lunettes de Zac",
+        "ADEME - Initiatives locales",
+        "PYREO",
+        "ECOPAE",
+        "Association des Ludothèques Françaises",
+        "Orange",
+        "VALDELIA",
+        "SOREN",
+        "Recyclivre - Point livres",
+        "MRES Asso - Maison Régionale de l'Environnement et des Solidarités",
+        "ADEME - Acteurs digitaux",
+        "Ville de Paris",
+        "ADEME - Initiatives nationales",
+        "Redeem Medical",
+        "CRAR Normandie",
+        "Emmaüs Défi",
+        "Collectivité Ambert Livradois Forez",
+        "VALOBAT",
+        "Le REFER",
+        "Collectif Encore",
+        "Emmaüs Connect",
+        "Métropole Grand Lyon",
+        "Origine Cycles"
+      ],
+      "x-separator": " | "
+    },
+    "nom": {
+      "x-originalName": "Nom",
+      "type": "string",
+      "description": "Nom de l'acteur",
+      "x-cardinality": 132987
+    },
+    "nom_commercial": {
+      "x-originalName": "Nom commercial",
+      "type": "string",
+      "description": "Enseigne commerciale, le cas échéant.",
+      "x-cardinality": 19831
+    },
+    "siren": {
+      "x-originalName": "SIREN",
+      "type": "string",
+      "title": "",
+      "x-capabilities": {
+        "textAgg": false
+      },
+      "maxLength": 200,
+      "x-refersTo": "http://dbpedia.org/ontology/siren",
+      "x-concept": {
+        "id": "siren",
+        "title": "SIREN",
+        "primary": true
+      },
+      "description": "",
+      "x-cardinality": 12355
+    },
+    "siret": {
+      "x-originalName": "SIRET",
+      "type": "string",
+      "description": "",
+      "x-refersTo": "http://www.datatourisme.fr/ontology/core/1.0/#siret",
+      "x-concept": {
+        "id": "siret",
+        "title": "SIRET",
+        "primary": true
+      },
+      "x-transform": {
+        "type": "string"
+      },
+      "x-cardinality": 81113
+    },
+    "description": {
+      "x-originalName": "Description",
+      "type": "string",
+      "description": "Champ libre permettant à l'acteur de décrire sa structure et/ou ses services.",
+      "x-cardinality": 1132
+    },
+    "type_dacteur": {
+      "x-originalName": "Type d'acteur",
+      "type": "string",
+      "description": "**Valeurs possibles :** \n<br />pav_ponctuel\n<br />pav_prive\n<br />pav_public\n<br />plateforme_inertes\n<br />ets_sante\n<br />decheterie\n<br />acteur_digital\n<br />commerce\n<br />artisan\n<br />collectivite\n<br />ess",
+      "x-cardinality": 11,
+      "examples": [
+        "pav_public",
+        "commerce",
+        "artisan",
+        "decheterie",
+        "collectivite",
+        "ess",
+        "pav_prive",
+        "plateforme_inertes",
+        "acteur_digital",
+        "ets_sante",
+        "pav_ponctuel"
+      ]
+    },
+    "site_web": {
+      "x-originalName": "Site web",
+      "type": "string",
+      "description": "",
+      "x-refersTo": "https://schema.org/WebPage",
+      "x-concept": {
+        "id": "webPage",
+        "title": "Page Web",
+        "primary": true
+      },
+      "x-cardinality": 7810
+    },
+    "telephone": {
+      "x-originalName": "Téléphone",
+      "type": "string",
+      "description": "",
+      "x-refersTo": "https://www.w3.org/2006/vcard/ns#tel",
+      "x-concept": {
+        "id": "tel",
+        "title": "N° de téléphone",
+        "primary": true
+      },
+      "x-cardinality": 39159
+    },
+    "adresse": {
+      "x-originalName": "Adresse",
+      "type": "string",
+      "description": "L'adresse postale de l'établissement",
+      "x-cardinality": 244783
+    },
+    "complement_dadresse": {
+      "x-originalName": "Complément d'adresse",
+      "type": "string",
+      "description": "complément à l'adresse postale, le cas échéant",
+      "x-cardinality": 17068
+    },
+    "code_postal": {
+      "x-originalName": "Code postal",
+      "type": "string",
+      "description": "",
+      "x-refersTo": "http://schema.org/postalCode",
+      "x-concept": {
+        "id": "postalCode",
+        "title": "Code postal",
+        "primary": true
+      },
+      "x-cardinality": 7778
+    },
+    "ville": {
+      "x-originalName": "Ville",
+      "type": "string",
+      "description": "",
+      "x-refersTo": "http://schema.org/City",
+      "x-concept": {
+        "id": "city",
+        "title": "Commune",
+        "primary": true
+      },
+      "x-cardinality": 44784
+    },
+    "latitude": {
+      "x-originalName": "latitude",
+      "type": "number",
+      "description": "",
+      "x-refersTo": "http://schema.org/latitude",
+      "x-concept": {
+        "id": "latitude",
+        "title": "Latitude",
+        "primary": true
+      }
+    },
+    "longitude": {
+      "x-originalName": "longitude",
+      "type": "number",
+      "description": "",
+      "x-refersTo": "http://schema.org/longitude",
+      "x-concept": {
+        "id": "longitude",
+        "title": "Longitude",
+        "primary": true
+      }
+    },
+    "qualites_et_labels": {
+      "x-originalName": "Qualités et labels",
+      "type": "string",
+      "description": "**Valeurs possibles :** \n<br />ess (Acteur de l'économie sociale et solidaire)\n<br />BonusRepar_ASL (Bonus Réparation)\n<br />bonusrepar_ABJ_TH (Bonus Réparation)\n<br />ecomaison (Bonus Réparation)\n<br />refashion (Bonus Réparation)\n<br />qualirepar (Bonus Réparation)\n<br />reparacteur (Chambre des métiers et de l'artisanat)",
+      "x-cardinality": 7,
+      "x-separator": " | "
+    },
+    "public_accueilli": {
+      "x-originalName": "Public accueilli",
+      "type": "string",
+      "description": "**Valeurs possibles :** \n<br />Particuliers, \n<br />Professionnels, \n<br />Particuliers &amp; Professionnels\n<br />[Vide] : à interpréter comme \"Particuliers\"",
+      "x-cardinality": 2,
+      "examples": [
+        "Particuliers",
+        "Particuliers et professionnels"
+      ]
+    },
+    "reprise": {
+      "x-originalName": "Reprise",
+      "type": "string",
+      "description": "**Valeurs possibles :** \n\t<br />1 pour 0\n\t<br />1 pour 1 (cela signifie que l'établissement peut reprendre un équipement usagé, uniquement dans le cadre d'un nouvel achat neuf)",
+      "x-cardinality": 2
+    },
+    "exclusivite_de_reprisereparation": {
+      "x-originalName": "Exclusivité de reprise/réparation",
+      "type": "boolean",
+      "description": "**Valeurs possibles :** \n<br />Non\n<br />Oui (cela signifie que l'établissement ne propose des réparations que sur les équipements de sa marque)",
+      "x-cardinality": 1,
+      "x-transform": {
+        "expr": "",
+        "examples": [
+          ""
+        ],
+        "type": "boolean"
+      },
+      "examples": [
+        "false"
+      ]
+    },
+    "uniquement_sur_rdv": {
+      "x-originalName": "Uniquement sur RDV",
+      "type": "boolean",
+      "description": "**Valeurs possibles :** \n<br />oui<br />\nnon",
+      "x-cardinality": 1,
+      "x-transform": {
+        "expr": "",
+        "examples": [
+          ""
+        ],
+        "type": "boolean"
+      },
+      "examples": [
+        "false"
+      ]
+    },
+    "type_de_services": {
+      "x-originalName": "Type de services",
+      "type": "string",
+      "description": "**Valeurs possibles :** \nachat_revente_particuliers<br />\nachat_revente_professionnel<br />\nrelai_acteurs_et_evenements<br />\natelier_pour_reparer_soi_meme<br />\ndepot_vente<br />\ndon_particuliers<br />\nechanges_particuliers<br />\nespace_de_partage<br />\nlocaltion_particuliers<br />\nlocation_professionnel<br />\npartage_particuliers<br />\npieces_detachees<br />\nrecyclerie<br />\nservice_de_reparation<br />\nstructure_qui_sous_traite_la_reparation<br />\nstructure_de_collecte<br />\ntutoriels_et_diagnostics_en_ligne<br />",
+      "x-cardinality": 239
+    },
+    "propositions_de_services": {
+      "x-originalName": "Propositions de services",
+      "type": "string",
+      "description": "Liste les actions possibles à cette adresse et les catégories d'objets pris en charge.\nUne adresse peut proposer plusieurs actions, et peut prendre en charge plusieurs catégories d'objets. \n<br />\n**Format :** \n[{\"action\":\"action1\",\"sous_categories\":[\"objet1\",\"objet2\"]},{\"action\":\"action2\",\"sous_categories\":[\"objet1\",\"objet2\"]}]\n<br />\n**Actions possibles :**\npreter<br />\nemprunter<br />\nlouer<br />\nmettre en location<br />\nreparer<br />\ndonner<br />\nechanger<br />\nacheter<br />\nrevendre<br />\ntrier\n\n**Catégories possibles - Code :**\naccessoire et meuble de jardin\nampoule\nautre equipement electronique\nAutres PMCB\nBateau\nbatteries_de_mtl\nbatterie_de_voitures_pour_demarrage\nBatteries & piles portables\nBéton - PMCB (produits et matériaux de construction du bâtiment)\nbijou et montre\nbiodechets\nBois - PMCB (produits et matériaux de construction du bâtiment)\nbouchonsenliege\nbouteilles_plastique\ncartouches\nCD, DVD et jeu video\nchaussures\nDéchets dangereux de PMCB (produits et matériaux de construction du bâtiment)\nDéchets de peintures, vernis, encres et colles - Produits chimiques\nDéchets de produits chimiques\nDéchets de produits chimiques acides\nDéchets de produits chimiques basiques\nDéchets phytosanitaires ménagers - Produits chimiques\ndechets_verts\ndecoration\nDécoration textile - Éléments d'ameublement\ndasri\necran\nemballage_carton\nemballage_metal\nemballage_plastique\nemballage_verre\nemballage_reemployable\nautres_emballages_menagers\nencombrants_menagers_divers\ngros electromenager (hors refrigerant)\ngros electromenager (refrigerant)\nHuiles_lubrifiantes\nHuisseries (produits et matériaux de construction du bâtiment)\ninstrument de musique\ninstrument_musique_electrique\nJELS_Mobilite_electrique\njouet\nLaine de roche (produits et matériaux de construction du bâtiment)\nLaine de verre (produits et matériaux de construction du bâtiment)\nlinge de maison\nLiterie - Éléments d'ameublement\nlivre\nluminaire\nlunettes_de_vue_aides_techniques\nMachines et appareils motorises thermiques\nmaroquinerie\nmateriau du batiment reemployable\nmateriel de sport (hors velo)\nmateriel hifi et video\nmateriel informatique\nmateriel medical\nmateriel photo et cinema\nmedicaments\nMélange d’inertes (produits et matériaux de construction du bâtiment)\nMembranes bitumineuses - PMCB (produits et matériaux de construction du bâtiment)\nMétal - PMCB (produits et matériaux de construction du bâtiment)\nmeuble\noutil de bricolage et jardinage\nABJ_electrique\nABJ_Outillage du peintre usagé\npalette\nPanneaux photovoltaïques\npapiers_graphiques\npetit electromenager\nPetits appareils extincteurs\nPlastiques - PMCB (produits et matériaux de construction du bâtiment)\nPlâtre - PMCB (produits et matériaux de construction du bâtiment)\nPneu\nProduits chimiques - Solvants\nProduits pyrotechniques\npuericulture\nRembourrés d'assise ou de couchage - Éléments d'ameublement\nSièges - Éléments d'ameublement\nsmartphone, tablette et console\nvaisselle\nVehicule\nvelo\nvetement\n\n**Catégories possibles - Libellé :**\nAccessoire et meuble de jardin\nAmpoule\nAutre équipement électronique\nAutres PMCB (Produits de construction d'origine végétale, animale, ou autres déchets de PMCB non-séparables)\nBateau\nBatteries de moyens de transport Légers (MTL)\nBatteries de voitures pour démarrage, éclairage & allumage (SLI)\nBatteries & piles portables\nBéton (Bâtiment)\nBijou et montre\nBiodéchets & déchets alimentaires\nBois (Matériaux du Bâtiment)\nBouchons en liège\nBouteille plastique\nCartouches d'encre\nCD, DVD et jeu vidéo\nChaussures\nDéchets dangereux du bâtiment\nDéchets de peintures, vernis, encres et colles - Produits chimiques\nDéchets de produits chimiques\nDéchets de produits chimiques acides\nDéchets de produits chimiques basiques\nDéchets phytosanitaires ménagers - Produits chimiques\nDéchets verts\nDécoration\nDécoration textile - Éléments d'ameublement\nDispositifs Médicaux Perforants / Déchets d'Activités de Soins à Risque Infectieux (DASRI)\nÉcran\nEmballage en carton\nEmballage en métal\nEmballage en plastique\nEmballage en verre\nEmballage réemployable\nEmballages ménagers multimatériaux\nEncombrants ménagers divers\nGros électroménager (hors réfrigérant)\nGros électroménager (réfrigérant)\nHuiles lubrifiantes\nHuisseries (Bâtiment)\nInstrument de musique\nInstrument de musique électrique\nJELS (Jouets, équipements de loisirs et de sport) - Mobilité\nJouet\nLaine de roche (Bâtiment)\nLaine de verre (Bâtiment)\nLinge de maison\nLiterie - Éléments d'ameublement\nLivre\nLuminaire\nLunettes de vue\nMachines et appareils motorisés thermiques\nMaroquinerie\nMatériau du bâtiment réemployable\nMatériel de sport (hors vélo)\nMatériel hifi et vidéo\nMatériel informatique\nMatériel médical\nmatériel photo et cinéma\nMédicaments non utilisés\nMélange d’inertes (Bâtiment)\nMembranes bitumineuses (Bâtiment)\nMétal (Matériaux du Bâtiment)\nMeuble\nOutil de bricolage et jardinage\nOutil de bricolage et jardinage électrique\nOutillage du peintre usagé\nPalette\nPanneaux photovoltaïques\nPapier graphique\nPetit électroménager\nPetits appareils extincteurs\nPlastiques (Matériaux du bâtiment)\nPlâtre (Bâtiment)\nPneu\nProduits chimiques - Solvants\nProduits pyrotechniques\nPuériculture\nRembourrés d'assise ou de couchage - Éléments d'ameublement\nSièges - Éléments d'ameublement\nSmartphone, tablette et console\nVaisselle\nVéhicule\nVélo\nVêtement\n",
+      "x-cardinality": 1054
+    },
+    "date_de_derniere_modification": {
+      "x-originalName": "Date de dernière modification",
+      "type": "string",
+      "format": "date",
+      "description": "",
+      "x-cardinality": 506
+    },
+    "emprunter": {
+      "x-originalName": "emprunter",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    },
+    "preter": {
+      "x-originalName": "preter",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    },
+    "louer": {
+      "x-originalName": "louer",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    },
+    "mettreenlocation": {
+      "x-originalName": "mettreenlocation",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    },
+    "reparer": {
+      "x-originalName": "reparer",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    },
+    "donner": {
+      "x-originalName": "donner",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    },
+    "trier": {
+      "x-originalName": "trier",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    },
+    "echanger": {
+      "x-originalName": "echanger",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    },
+    "revendre": {
+      "x-originalName": "revendre",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    },
+    "acheter": {
+      "x-originalName": "acheter",
+      "type": "string",
+      "x-display": "textarea",
+      "x-capabilities": {
+        "index": false,
+        "values": false,
+        "insensitive": false
+      },
+      "description": ""
+    }
+  }
+}
