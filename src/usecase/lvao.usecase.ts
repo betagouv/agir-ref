@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import fs from 'fs';
-import { ActeurLVAO } from '../domain/lvao/acteurLVAO';
-import { ActionLVAO } from '../domain/lvao/actionLVAO';
+import { ActeurLVAO, InnerActionLVAO } from '../domain/lvao/acteurLVAO';
 import { LabelLVAO } from '../domain/lvao/LabelLVAO';
 import { ObjetLVAO } from '../domain/lvao/objetLVAO';
 import { PublicLVAO } from '../domain/lvao/publicLVAO';
@@ -174,8 +173,8 @@ export class LVAOUsecase {
     return result;
   }
 
-  private parsePropDeService(props: string): ActionLVAO[] {
-    return JSON.parse(props) as ActionLVAO[];
+  private parsePropDeService(props: string): InnerActionLVAO[] {
+    return JSON.parse(props) as InnerActionLVAO[];
   }
 
   private splitOrEmptyArray(data: string): string[] {

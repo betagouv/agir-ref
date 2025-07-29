@@ -5,7 +5,7 @@ import { SourceLVAO } from './sourceLVAO';
 import { TypeActeurLVAO } from './typeActeurLVAO';
 import { TypeServiceLVAO } from './typeServiceLVAO';
 
-export class ActionLVAO {
+export class InnerActionLVAO {
   action: string;
   sous_categfories: string[];
 }
@@ -33,7 +33,7 @@ export class ActeurLVAO {
   reprise_exclusif: boolean;
   sur_rdv: boolean;
   types_service: TypeServiceLVAO[];
-  detail_services: ActionLVAO[];
+  detail_services: InnerActionLVAO[];
   date_derniere_maj: Date;
   emprunter: ObjetLVAO[];
   preter: ObjetLVAO[];
