@@ -1,9 +1,9 @@
-import { LabelLVAO } from './LabelLVAO';
-import { ObjetLVAO } from './objetLVAO';
-import { PublicLVAO } from './publicLVAO';
-import { SourceLVAO } from './sourceLVAO';
-import { TypeActeurLVAO } from './typeActeurLVAO';
-import { TypeServiceLVAO } from './typeServiceLVAO';
+import { LabelLVAO } from './label_LVAO';
+import { ObjetLVAO } from './objet_LVAO';
+import { PublicLVAO } from './public_LVAO';
+import { SourceLVAO } from './source_LVAO';
+import { TypeActeurLVAO } from './typeActeur_LVAO';
+import { TypeServiceLVAO } from './typeService_LVAO';
 
 export class InnerActionLVAO {
   action: string;

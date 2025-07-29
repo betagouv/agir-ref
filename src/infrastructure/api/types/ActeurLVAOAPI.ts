@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { LabelLVAO } from '../../../domain/lvao/LabelLVAO';
-import { ObjetLVAO } from '../../../domain/lvao/objetLVAO';
-import { PublicLVAO } from '../../../domain/lvao/publicLVAO';
-import { SourceLVAO } from '../../../domain/lvao/sourceLVAO';
-import { TypeActeurLVAO } from '../../../domain/lvao/typeActeurLVAO';
-import { TypeServiceLVAO } from '../../../domain/lvao/typeServiceLVAO';
+import { LabelLVAO } from '../../../domain/lvao/label_LVAO';
+import { ObjetLVAO } from '../../../domain/lvao/objet_LVAO';
+import { PublicLVAO } from '../../../domain/lvao/public_LVAO';
+import { SourceLVAO } from '../../../domain/lvao/source_LVAO';
+import { TypeActeurLVAO } from '../../../domain/lvao/typeActeur_LVAO';
+import { TypeServiceLVAO } from '../../../domain/lvao/typeService_LVAO';
 
 export class ActionLVAO_API {
   @ApiProperty() action: string;

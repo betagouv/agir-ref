@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ActeurLVAO as ActeurLVAO_DB, Prisma } from '@prisma/client';
-import { ActeurLVAO } from '../../domain/lvao/acteurLVAO';
+import { ActeurLVAO } from '../../domain/lvao/acteur_LVAO';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()

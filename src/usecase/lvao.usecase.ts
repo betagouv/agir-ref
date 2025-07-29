@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import fs from 'fs';
-import { ActeurLVAO, InnerActionLVAO } from '../domain/lvao/acteurLVAO';
-import { LabelLVAO } from '../domain/lvao/LabelLVAO';
-import { ObjetLVAO } from '../domain/lvao/objetLVAO';
-import { PublicLVAO } from '../domain/lvao/publicLVAO';
-import { SourceLVAO } from '../domain/lvao/sourceLVAO';
-import { TypeActeurLVAO } from '../domain/lvao/typeActeurLVAO';
-import { TypeServiceLVAO } from '../domain/lvao/typeServiceLVAO';
+import { ActeurLVAO, InnerActionLVAO } from '../domain/lvao/acteur_LVAO';
+import { LabelLVAO } from '../domain/lvao/label_LVAO';
+import { ObjetLVAO } from '../domain/lvao/objet_LVAO';
+import { PublicLVAO } from '../domain/lvao/public_LVAO';
+import { SourceLVAO } from '../domain/lvao/source_LVAO';
+import { TypeActeurLVAO } from '../domain/lvao/typeActeur_LVAO';
+import { TypeServiceLVAO } from '../domain/lvao/typeService_LVAO';
 import { ActeurLVAO_API } from '../infrastructure/api/types/ActeurLVAOAPI';
 import { LVAORepository } from '../infrastructure/repository/lvao.repository';
 
