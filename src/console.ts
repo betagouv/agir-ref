@@ -8,7 +8,9 @@ async function bootstrap() {
   const command = process.argv[2];
   switch (command) {
     case 'load_lvao_big_csv':
-      await application.get(LVAOUsecase).smart_load_csv_lvao(process.argv[3]);
+      await application
+        .get(LVAOUsecase)
+        .smart_load_csv_lvao_file(process.argv[3]);
       break;
 
     default:

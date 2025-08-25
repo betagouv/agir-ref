@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { MulterModule } from '@nestjs/platform-express';
 import {
   DocumentBuilder,
   SwaggerCustomOptions,
@@ -8,6 +9,10 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  MulterModule.register({
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  });
 
   // Exposition Swagger
   const swaggerDocumentOptions: SwaggerCustomOptions = {

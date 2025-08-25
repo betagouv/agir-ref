@@ -6,4 +6,5 @@ export enum LabelLVAO {
   refashion = 'refashion',
   qualirepar = 'qualirepar',
   reparacteur = 'reparacteur',
+  bonusrepar = 'bonusrepar',
 }

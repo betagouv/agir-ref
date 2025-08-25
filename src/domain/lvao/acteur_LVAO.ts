@@ -1,3 +1,4 @@
+import { ActionLVAO } from './action_LVAO';
 import { LabelLVAO } from './label_LVAO';
 import { ObjetLVAO } from './objet_LVAO';
 import { PublicLVAO } from './public_LVAO';
@@ -6,8 +7,8 @@ import { TypeActeurLVAO } from './typeActeur_LVAO';
 import { TypeServiceLVAO } from './typeService_LVAO';
 
 export class InnerActionLVAO {
-  action: string;
-  sous_categfories: string[];
+  action: ActionLVAO;
+  sous_categories: ObjetLVAO[];
 }
 
 export class ActeurLVAO {

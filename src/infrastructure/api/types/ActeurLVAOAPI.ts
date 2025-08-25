@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ActionLVAO } from '../../../domain/lvao/action_LVAO';
 import { LabelLVAO } from '../../../domain/lvao/label_LVAO';
 import { ObjetLVAO } from '../../../domain/lvao/objet_LVAO';
 import { PublicLVAO } from '../../../domain/lvao/public_LVAO';
@@ -7,8 +8,9 @@ import { TypeActeurLVAO } from '../../../domain/lvao/typeActeur_LVAO';
 import { TypeServiceLVAO } from '../../../domain/lvao/typeService_LVAO';
 
 export class ActionLVAO_API {
-  @ApiProperty() action: string;
-  @ApiProperty() sous_categfories: string[];
+  @ApiProperty({ enum: ActionLVAO }) action: ActionLVAO;
+  @ApiProperty({ enum: ObjetLVAO, isArray: true })
+  sous_categories: ObjetLVAO[];
 }
 
 export class ActeurLVAO_API {

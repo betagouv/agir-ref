@@ -1,28 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { ActeurLVAO as ActeurLVAO_DB, Prisma } from '@prisma/client';
+import axios from 'axios';
+import { App } from '../../domain/app';
 import { ActeurLVAO } from '../../domain/lvao/acteur_LVAO';
-import { PrismaService } from '../prisma/prisma.service';
+import { ActeurLVAO_API } from '../api/types/ActeurLVAOAPI';
 
 @Injectable()
-export class LVAORepository {
-  constructor(private prisma: PrismaService) {}
+export class LVAOInternalAPIClient {
+  constructor() {}
 
-  async upsert_acteur(acteur: ActeurLVAO): Promise<void> {
-    const data: ActeurLVAO_DB = {
+  async put_acteur(acteur: ActeurLVAO): Promise<void> {
+    const payload: ActeurLVAO_API = {
       id: acteur.id,
-      acheter: acteur.acheter,
-      adresse: acteur.adresse,
+      donner: acteur.donner,
       code_postal: acteur.code_postal,
       complement_adresse: acteur.complement_adresse,
       date_derniere_maj: acteur.date_derniere_maj,
       description: acteur.description,
-      detail_services: acteur.detail_services as any,
-      donner: acteur.donner,
+      detail_services: acteur.detail_services,
       echanger: acteur.echanger,
       emprunter: acteur.emprunter,
       labels: acteur.labels,
-      latitude: acteur.latitude ? new Prisma.Decimal(acteur.latitude) : null,
-      longitude: acteur.longitude ? new Prisma.Decimal(acteur.longitude) : null,
+      latitude: acteur.latitude,
+      longitude: acteur.longitude,
       louer: acteur.louer,
       mettreenlocation: acteur.mettreenlocation,
       nom: acteur.nom,
@@ -41,22 +40,22 @@ export class LVAORepository {
       type_acteur: acteur.type_acteur,
       type_public: acteur.type_public,
       types_service: acteur.types_service,
+      acheter: acteur.acheter,
+      adresse: acteur.adresse,
       url: acteur.url,
       ville: acteur.ville,
-      created_at: undefined,
-      updated_at: undefined,
     };
-
-    await this.prisma.acteurLVAO.upsert({
-      where: {
-        id: data.id,
-      },
-      create: data,
-      update: data,
-    });
-  }
-
-  public async countAll(): Promise<number> {
-    return await this.prisma.acteurLVAO.count();
+    try {
+      await axios.put(App.getActeurAPIURL(), payload, {
+        timeout: 1000,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${App.getCronAPIKey()}`,
+        },
+      });
+      console.log('OK');
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

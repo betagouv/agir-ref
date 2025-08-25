@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import fs from 'fs';
+import { Stream } from 'stream';
 import { ActeurLVAO, InnerActionLVAO } from '../domain/lvao/acteur_LVAO';
 import { LabelLVAO } from '../domain/lvao/label_LVAO';
 import { ObjetLVAO } from '../domain/lvao/objet_LVAO';
@@ -9,6 +10,7 @@ import { TypeActeurLVAO } from '../domain/lvao/typeActeur_LVAO';
 import { TypeServiceLVAO } from '../domain/lvao/typeService_LVAO';
 import { ActeurLVAO_API } from '../infrastructure/api/types/ActeurLVAOAPI';
 import { LVAORepository } from '../infrastructure/repository/lvao.repository';
+import { LVAOInternalAPIClient } from '../infrastructure/repository/lvaoInternalAPIClient';
 
 type LVAO_CSV_ROW = {
   identifiant: string; //'222dMMK2fP52fhyhjJcYMY',
@@ -49,43 +51,79 @@ type LVAO_CSV_ROW = {
 
 @Injectable()
 export class LVAOUsecase {
-  constructor(private lvaoRepository: LVAORepository) {}
+  constructor(
+    private lvaoRepository: LVAORepository,
+    private lvao_api_client: LVAOInternalAPIClient,
+  ) {}
 
+  public async count_acteurs(): Promise<number> {
+    return await this.lvaoRepository.countAll();
+  }
   public async upsert_acteur(acteur: ActeurLVAO_API): Promise<void> {
     await this.lvaoRepository.upsert_acteur(this.parse_acteur_API(acteur));
   }
 
-  public async smart_load_csv_lvao(csvFilePath: string) {
+  public async smart_load_csv_lvao_buffer(buffer: Buffer) {
+    var Stream = require('stream');
+    var stream = new Stream();
+
+    const data = buffer.toString();
+    stream.pipe = function (dest) {
+      dest.write(data);
+      return dest;
+    };
+
+    await this.smart_load_csv_stream(stream);
+  }
+  public async smart_load_csv_lvao_file(csvFilePath: string) {
+    let inputStream = fs.createReadStream(csvFilePath, 'utf8');
+    await this.smart_load_csv_stream(inputStream);
+  }
+
+  public async smart_load_csv_stream(stream: Stream) {
     const CsvReadableStream = require('csv-reader');
 
-    let inputStream = fs.createReadStream(csvFilePath, 'utf8');
-
-    const _this = this;
-    await new Promise((resolve, reject) => {
-      inputStream
-        .pipe(
-          new CsvReadableStream({
-            parseNumbers: false,
-            parseBooleans: true,
-            trim: true,
-            asObject: true,
-          }),
-        )
-        .on('data', function (row: LVAO_CSV_ROW) {
-          console.log(_this.parse_acteur_CSV(row));
-        })
-        .on('error', function (err) {
-          console.log(err);
-          reject(err);
-        })
-        .on('end', function () {
-          console.log('No more rows!');
-          resolve({});
-        });
+    const analyser = new CsvReadableStream({
+      parseNumbers: false,
+      parseBooleans: true,
+      trim: true,
+      asObject: true,
     });
+
+    stream.pipe(analyser);
+    const _this = this;
+
+    const job = new Promise(function (resolve, reject) {
+      analyser.on('data', async function (row: LVAO_CSV_ROW) {
+        try {
+          console.log(`pushing id : ${row.identifiant}`);
+          await _this.lvao_api_client.put_acteur(_this.parse_acteur_CSV(row));
+        } catch (error) {
+          console.log(error);
+        }
+      });
+      analyser.on('error', function (err) {
+        console.log(err);
+        reject(err);
+      });
+      analyser.on('end', function () {
+        console.log('No more rows!');
+        resolve({});
+      });
+    });
+
+    await job;
   }
 
   private parse_acteur_CSV(row: LVAO_CSV_ROW): ActeurLVAO {
+    let latitude = parseFloat(row.latitude);
+    let longitude = parseFloat(row.longitude);
+    if (Number.isNaN(latitude)) {
+      latitude = null;
+    }
+    if (Number.isNaN(longitude)) {
+      longitude = null;
+    }
     const result = new ActeurLVAO({
       acheter: this.splitOrEmptyArray(row.acheter).map((e) => ObjetLVAO[e]),
       adresse: row.adresse,
@@ -101,8 +139,8 @@ export class LVAOUsecase {
       labels: this.splitOrEmptyArray(row.qualites_et_labels).map(
         (e) => LabelLVAO[e],
       ),
-      latitude: parseFloat(row.latitude),
-      longitude: parseFloat(row.longitude),
+      latitude: latitude,
+      longitude: longitude,
       louer: this.splitOrEmptyArray(row.louer).map((e) => ObjetLVAO[e]),
       mettreenlocation: this.splitOrEmptyArray(row.mettreenlocation).map(
         (e) => ObjetLVAO[e],
