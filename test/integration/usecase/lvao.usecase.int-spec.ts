@@ -7,13 +7,11 @@ import { SourceLVAO } from '../../../src/domain/lvao/source_LVAO';
 import { TypeActeurLVAO } from '../../../src/domain/lvao/typeActeur_LVAO';
 import { TypeServiceLVAO } from '../../../src/domain/lvao/typeService_LVAO';
 import { LVAORepository } from '../../../src/infrastructure/repository/lvao.repository';
-import { LVAOInternalAPIClient } from '../../../src/infrastructure/repository/lvaoInternalAPIClient';
 import { LVAOUsecase } from '../../../src/usecase/lvao.usecase';
 import { TestUtil } from '../../TestUtil';
 
 const lvao_repository = new LVAORepository(TestUtil.prisma);
-const lvao_api_client = new LVAOInternalAPIClient();
-const lvao_usecase = new LVAOUsecase(lvao_repository, lvao_api_client);
+const lvao_usecase = new LVAOUsecase(lvao_repository);
 
 describe('LVAO Usecase', () => {
   beforeAll(async () => {
@@ -124,15 +122,13 @@ describe('LVAO Usecase', () => {
     });
   });
 
-  it.skip('Upserts from CSV file OK', async () => {
+  it('Upserts from CSV file OK', async () => {
     // GIVEN
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     const file_name = 'acteurs_extract.csv';
     await TestUtil.prisma.acteurLVAO.deleteMany();
 
     // WHEN
     await lvao_usecase.smart_load_csv_lvao_file(__dirname + '/' + file_name);
-    await delay(1000); // FIXME ^^
 
     // THEN
     const db = await TestUtil.prisma.acteurLVAO.findMany();

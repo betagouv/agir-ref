@@ -5,7 +5,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { LVAOController } from './infrastructure/api/lvao.controller';
 import { PrismaService } from './infrastructure/prisma/prisma.service';
 import { LVAORepository } from './infrastructure/repository/lvao.repository';
-import { LVAOInternalAPIClient } from './infrastructure/repository/lvaoInternalAPIClient';
 import { LVAOUsecase } from './usecase/lvao.usecase';
 
 function getControllers(): any[] {
@@ -25,11 +24,6 @@ function getControllers(): any[] {
     ]),
   ],
   controllers: getControllers(),
-  providers: [
-    PrismaService,
-    LVAORepository,
-    LVAOUsecase,
-    LVAOInternalAPIClient,
-  ],
+  providers: [PrismaService, LVAORepository, LVAOUsecase],
 })
 export class AppModule {}

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { parse } from 'csv-parse';
 import fs from 'fs';
 import { Stream } from 'stream';
 import { ActeurLVAO, InnerActionLVAO } from '../domain/lvao/acteur_LVAO';
@@ -10,7 +11,6 @@ import { TypeActeurLVAO } from '../domain/lvao/typeActeur_LVAO';
 import { TypeServiceLVAO } from '../domain/lvao/typeService_LVAO';
 import { ActeurLVAO_API } from '../infrastructure/api/types/ActeurLVAOAPI';
 import { LVAORepository } from '../infrastructure/repository/lvao.repository';
-import { LVAOInternalAPIClient } from '../infrastructure/repository/lvaoInternalAPIClient';
 
 type LVAO_CSV_ROW = {
   identifiant: string; //'222dMMK2fP52fhyhjJcYMY',
@@ -51,10 +51,7 @@ type LVAO_CSV_ROW = {
 
 @Injectable()
 export class LVAOUsecase {
-  constructor(
-    private lvaoRepository: LVAORepository,
-    private lvao_api_client: LVAOInternalAPIClient,
-  ) {}
+  constructor(private lvaoRepository: LVAORepository) {}
 
   public async count_acteurs(): Promise<number> {
     return await this.lvaoRepository.countAll();
@@ -64,55 +61,26 @@ export class LVAOUsecase {
   }
 
   public async smart_load_csv_lvao_buffer(buffer: Buffer) {
-    var Stream = require('stream');
-    var stream = new Stream();
-
-    const data = buffer.toString();
-    stream.pipe = function (dest) {
-      dest.write(data);
-      return dest;
-    };
-
-    await this.smart_load_csv_stream(stream);
+    const { Readable } = require('stream');
+    const stream = Readable.from(buffer);
+    await this.loadCsvStream_V2(stream);
   }
+
   public async smart_load_csv_lvao_file(csvFilePath: string) {
     let inputStream = fs.createReadStream(csvFilePath, 'utf8');
-    await this.smart_load_csv_stream(inputStream);
+    await this.loadCsvStream_V2(inputStream);
   }
 
-  public async smart_load_csv_stream(stream: Stream) {
-    const CsvReadableStream = require('csv-reader');
-
-    const analyser = new CsvReadableStream({
-      parseNumbers: false,
-      parseBooleans: true,
-      trim: true,
-      asObject: true,
-    });
-
-    stream.pipe(analyser);
-    const _this = this;
-
-    const job = new Promise(function (resolve, reject) {
-      analyser.on('data', async function (row: LVAO_CSV_ROW) {
-        try {
-          console.log(`pushing id : ${row.identifiant}`);
-          await _this.lvao_api_client.put_acteur(_this.parse_acteur_CSV(row));
-        } catch (error) {
-          console.log(error);
-        }
-      });
-      analyser.on('error', function (err) {
-        console.log(err);
-        reject(err);
-      });
-      analyser.on('end', function () {
-        console.log('No more rows!');
-        resolve({});
-      });
-    });
-
-    await job;
+  private async loadCsvStream_V2(stream: Stream) {
+    const parser = stream.pipe(parse({ columns: true }));
+    let count = 0;
+    // Iterate through each records
+    for await (const record of parser) {
+      const acteur = this.parse_acteur_CSV(record);
+      await this.lvaoRepository.upsert_acteur(acteur);
+      count++;
+    }
+    console.log(`Loaded  ${count} rows`);
   }
 
   private parse_acteur_CSV(row: LVAO_CSV_ROW): ActeurLVAO {

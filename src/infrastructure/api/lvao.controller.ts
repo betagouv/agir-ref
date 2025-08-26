@@ -55,7 +55,6 @@ export class LVAOController extends GenericControler {
     @Request() req,
     @Body() body: ActeurLVAO_API,
   ): Promise<void> {
-    console.log('haha');
     this.checkCronAPIProtectedEndpoint(req);
     await this.lvao_usecase.upsert_acteur(body);
   }
@@ -82,7 +81,11 @@ export class LVAOController extends GenericControler {
       },
     },
   })
-  async uploadBatchCSV(@UploadedFile() file: Express.Multer.File) {
+  async uploadBatchCSV(
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    this.checkCronAPIProtectedEndpoint(req);
     console.log(file);
 
     this.lvao_usecase.smart_load_csv_lvao_buffer(file.buffer);
