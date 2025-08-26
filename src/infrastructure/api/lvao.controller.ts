@@ -58,10 +58,20 @@ export class LVAOController extends GenericControler {
     this.checkCronAPIProtectedEndpoint(req);
     await this.lvao_usecase.upsert_acteur(body);
   }
+
   @Get('lvao/acteurs/count')
   async count_acteurs(@Request() req) {
     this.checkCronAPIProtectedEndpoint(req);
     const count = await this.lvao_usecase.count_acteurs();
+    return {
+      count: count,
+    };
+  }
+
+  @Post('lvao/acteurs/recompute_geometry')
+  async recompute_geometry(@Request() req) {
+    this.checkCronAPIProtectedEndpoint(req);
+    const count = await this.lvao_usecase.recompute_geometry();
     return {
       count: count,
     };

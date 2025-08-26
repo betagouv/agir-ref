@@ -11,7 +11,7 @@ datasource db {
 }
 
 model ActeurLVAO {
-  id                 String   @id
+  id                 String                                @id
   sources            String[]
   nom                String?
   nom_commercial     String?
@@ -33,8 +33,8 @@ model ActeurLVAO {
   reprise_exclusif   Boolean?
   sur_rdv            Boolean?
   types_service      String[]
-  detail_services    Json     @default("{}")
-  date_derniere_maj  DateTime @db.Timestamptz(3)
+  detail_services    Json                                  @default("{}")
+  date_derniere_maj  DateTime                              @db.Timestamptz(3)
   emprunter          String[]
   preter             String[]
   louer              String[]
@@ -45,6 +45,9 @@ model ActeurLVAO {
   echanger           String[]
   revendre           String[]
   acheter            String[]
-  created_at         DateTime @default(now()) @db.Timestamptz(3)
-  updated_at         DateTime @default(now()) @updatedAt @db.Timestamptz(3)
+  geom               Unsupported("geometry(Point, 4326)")?
+  created_at         DateTime                              @default(now()) @db.Timestamptz(3)
+  updated_at         DateTime                              @default(now()) @updatedAt @db.Timestamptz(3)
+
+  @@index([geom], name: "location_idx", type: Gist)
 }

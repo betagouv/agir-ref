@@ -56,6 +56,9 @@ export class LVAOUsecase {
   public async count_acteurs(): Promise<number> {
     return await this.lvaoRepository.countAll();
   }
+  public async recompute_geometry(): Promise<number> {
+    return await this.lvaoRepository.updateAllGeom();
+  }
   public async upsert_acteur(acteur: ActeurLVAO_API): Promise<void> {
     await this.lvaoRepository.upsert_acteur(this.parse_acteur_API(acteur));
   }

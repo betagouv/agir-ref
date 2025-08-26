@@ -59,4 +59,11 @@ export class LVAORepository {
   public async countAll(): Promise<number> {
     return await this.prisma.acteurLVAO.count();
   }
+
+  public async updateAllGeom(): Promise<number> {
+    const result = await this.prisma.$executeRawUnsafe(
+      `UPDATE "ActeurLVAO" SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);`,
+    );
+    return result;
+  }
 }
