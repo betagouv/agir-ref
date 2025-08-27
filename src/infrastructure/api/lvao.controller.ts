@@ -69,12 +69,12 @@ export class LVAOController extends GenericControler {
   @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 10, ttl: 2000 } })
   async count_acteurs(@Request() req) {
-    this.checkCronAPIProtectedEndpoint(req);
     const count = await this.lvao_usecase.count_acteurs();
     return {
       count: count,
     };
   }
+
   @Get('lvao/acteurs')
   @ApiQuery({
     name: 'longitude',
@@ -121,7 +121,6 @@ export class LVAOController extends GenericControler {
     @Query('action') action: ActionLVAO,
     @Query('objet') objet: ObjetLVAO,
   ) {
-    this.checkCronAPIProtectedEndpoint(req);
     const result = await this.lvao_usecase.listActeurs(
       longitude,
       latitude,
