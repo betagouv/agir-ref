@@ -219,7 +219,7 @@ describe('Acteurs LVAO (API test)', () => {
     expect(response.body).toHaveLength(1);
     expect(response.body[0].id).toEqual('1');
   });
-  it(`GET lvao/acteurs : rayon correcte`, async () => {
+  it(`GET lvao/acteurs : rayon correcte #1`, async () => {
     // GIVEN
     process.env.CRON_API_KEY = '123';
     await TestUtil.prisma.acteurLVAO.deleteMany();
@@ -252,6 +252,41 @@ describe('Acteurs LVAO (API test)', () => {
     // THEN
     expect(response.status).toEqual(200);
     expect(response.body).toHaveLength(2);
+    expect(response.body[0].id).toEqual('1');
+  });
+  it(`GET lvao/acteurs : rayon correcte #2`, async () => {
+    // GIVEN
+    process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
+
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '1',
+      longitude: 0,
+      latitude: 40,
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '2',
+      longitude: 0,
+      latitude: 41,
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '3',
+      longitude: 0,
+      latitude: 42,
+    });
+    await lvao_usecase.recompute_geometry();
+
+    // WHEN
+    const response = await TestUtil.GET(
+      '/lvao/acteurs?latitude=40&longitude=0&rayon_metres=111000',
+    ).set('Authorization', `Bearer 123`);
+
+    // THEN
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(1);
     expect(response.body[0].id).toEqual('1');
   });
   it(`GET lvao/acteurs : filtre actions correcte`, async () => {

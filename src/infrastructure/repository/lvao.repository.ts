@@ -134,7 +134,7 @@ export class LVAORepository {
       query += `WHERE `;
     }
     if (rayon_metres) {
-      query += `${DISTANCE_VALUE} < ${rayon_metres} `;
+      query += `ST_DWithin(geom::geography,ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}),4326)::geography,${rayon_metres}) `;
       pos_condition++;
     }
     if (action && !objet) {
