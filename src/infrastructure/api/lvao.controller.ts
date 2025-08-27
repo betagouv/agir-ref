@@ -10,6 +10,7 @@ import {
   Query,
   Request,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -21,6 +22,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { ActionLVAO } from '../../domain/lvao/action_LVAO';
 import { ObjetLVAO } from '../../domain/lvao/objet_LVAO';
 import { LVAOUsecase } from '../../usecase/lvao.usecase';
@@ -64,6 +66,8 @@ export class LVAOController extends GenericControler {
   }
 
   @Get('lvao/acteurs/count')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 10, ttl: 2000 } })
   async count_acteurs(@Request() req) {
     this.checkCronAPIProtectedEndpoint(req);
     const count = await this.lvao_usecase.count_acteurs();
@@ -106,6 +110,8 @@ export class LVAOController extends GenericControler {
     required: false,
     description: `Le type d'objet sur lequel on cherche à appliquer l'action : jouet, livre, etc`,
   })
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 10, ttl: 2000 } })
   async liste_acteurs(
     @Request() req,
     @Query('longitude') longitude: number,
