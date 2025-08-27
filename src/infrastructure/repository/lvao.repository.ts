@@ -152,7 +152,7 @@ export class LVAORepository {
       };
       const cond = CONDITIONS_ACTIONS[action];
       if (cond) {
-        query += (pos_condition > 0 ? 'AND' : '') + cond;
+        query += (pos_condition > 0 ? 'AND ' : '') + cond;
       } else {
         return []; // on ne trouve rien ^^
       }
@@ -173,7 +173,7 @@ export class LVAORepository {
       };
       const cond = CONDITIONS_ACTIONS[action];
       if (cond) {
-        query += (pos_condition > 0 ? 'AND' : '') + cond;
+        query += (pos_condition > 0 ? 'AND ' : '') + cond;
       } else {
         return []; // on ne trouve rien ^^
       }
@@ -193,7 +193,7 @@ export class LVAORepository {
         trier: `'${objet}' = ANY(trier) `,
       };
 
-      query += pos_condition > 0 ? 'AND' : '';
+      query += pos_condition > 0 ? 'AND ' : '';
       for (const value of Object.values(CONDITIONS_ACTIONS)) {
         query += value;
       }
