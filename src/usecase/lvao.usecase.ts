@@ -56,11 +56,26 @@ export class LVAOUsecase {
   public async count_acteurs(): Promise<number> {
     return await this.lvaoRepository.countAll();
   }
+
   public async recompute_geometry(): Promise<number> {
     return await this.lvaoRepository.updateAllGeom();
   }
+
   public async upsert_acteur(acteur: ActeurLVAO_API): Promise<void> {
     await this.lvaoRepository.upsert_acteur(this.parse_acteur_API(acteur));
+  }
+
+  public async listActeurs(
+    longitude: number,
+    latitude: number,
+    limit: number,
+  ): Promise<ActeurLVAO[]> {
+    const result = await this.lvaoRepository.selectByDistanceFrom(
+      longitude,
+      latitude,
+      limit,
+    );
+    return result;
   }
 
   public async smart_load_csv_lvao_buffer(buffer: Buffer) {

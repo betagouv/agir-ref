@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ActeurLVAO } from '../../../domain/lvao/acteur_LVAO';
 import { ActionLVAO } from '../../../domain/lvao/action_LVAO';
 import { LabelLVAO } from '../../../domain/lvao/label_LVAO';
 import { ObjetLVAO } from '../../../domain/lvao/objet_LVAO';
@@ -18,6 +19,7 @@ export class ActeurLVAO_API {
   @ApiProperty({ enum: SourceLVAO, isArray: true }) sources: SourceLVAO[];
   @ApiProperty() nom: string;
   @ApiProperty() nom_commercial: string;
+  @ApiProperty({ required: false }) distance_metres?: number;
   @ApiProperty() siren: string;
   @ApiProperty() siret: string;
   @ApiProperty() description: string;
@@ -50,4 +52,44 @@ export class ActeurLVAO_API {
   @ApiProperty({ enum: ObjetLVAO, isArray: true }) echanger: ObjetLVAO[];
   @ApiProperty({ enum: ObjetLVAO, isArray: true }) revendre: ObjetLVAO[];
   @ApiProperty({ enum: ObjetLVAO, isArray: true }) acheter: ObjetLVAO[];
+
+  public static mapToAPI(acteur: ActeurLVAO): ActeurLVAO_API {
+    return {
+      acheter: acteur.acheter,
+      adresse: acteur.adresse,
+      code_postal: acteur.code_postal,
+      complement_adresse: acteur.complement_adresse,
+      date_derniere_maj: acteur.date_derniere_maj,
+      description: acteur.description,
+      detail_services: acteur.detail_services,
+      donner: acteur.donner,
+      echanger: acteur.echanger,
+      emprunter: acteur.emprunter,
+      id: acteur.id,
+      labels: acteur.labels,
+      latitude: acteur.latitude,
+      longitude: acteur.longitude,
+      louer: acteur.louer,
+      mettreenlocation: acteur.mettreenlocation,
+      nom: acteur.nom,
+      nom_commercial: acteur.nom_commercial,
+      preter: acteur.preter,
+      reparer: acteur.reparer,
+      reprise: acteur.reprise,
+      reprise_exclusif: acteur.reprise_exclusif,
+      revendre: acteur.revendre,
+      siren: acteur.siren,
+      siret: acteur.siret,
+      sources: acteur.sources,
+      sur_rdv: acteur.sur_rdv,
+      telephone: acteur.telephone,
+      trier: acteur.trier,
+      type_acteur: acteur.type_acteur,
+      ville: acteur.ville,
+      url: acteur.url,
+      type_public: acteur.type_public,
+      types_service: acteur.types_service,
+      distance_metres: acteur.distance_metres,
+    };
+  }
 }

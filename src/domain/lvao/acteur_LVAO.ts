@@ -46,6 +46,7 @@ export class ActeurLVAO {
   echanger: ObjetLVAO[];
   revendre: ObjetLVAO[];
   acheter: ObjetLVAO[];
+  distance_metres?: number;
 
   constructor(acteur: ActeurLVAO) {
     Object.assign(this, acteur);

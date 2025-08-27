@@ -12,6 +12,46 @@ import { TestUtil } from '../../TestUtil';
 const lvao_repository = new LVAORepository(TestUtil.prisma);
 const lvao_usecase = new LVAOUsecase(lvao_repository);
 
+const basic_data = {
+  acheter: [ObjetLVAO.Bateau],
+  adresse: 'adresse',
+  code_postal: '12345',
+  complement_adresse: 'haha',
+  date_derniere_maj: new Date(123),
+  description: 'beaux beateaux',
+  detail_services: [
+    { action: ActionLVAO.echanger, sous_categories: [ObjetLVAO.Bateau] },
+  ],
+  donner: [ObjetLVAO['Autres PMCB']],
+  echanger: [ObjetLVAO.velo],
+  emprunter: [ObjetLVAO['Déchets de produits chimiques acides']],
+  id: '1234567',
+  labels: [LabelLVAO.ecomaison],
+  latitude: 40,
+  longitude: 2,
+  louer: [ObjetLVAO.puericulture],
+  mettreenlocation: [ObjetLVAO.palette],
+  nom: 'nom',
+  nom_commercial: 'nom_commercial',
+  preter: [ObjetLVAO.papiers_graphiques],
+  reparer: [ObjetLVAO.vaisselle],
+  reprise: 'reprise',
+  reprise_exclusif: true,
+  revendre: [ObjetLVAO['smartphone, tablette et console']],
+  siren: 'siren',
+  siret: 'siret',
+  sources: [SourceLVAO['ADEME - SINOE']],
+  sur_rdv: true,
+  telephone: '0612345678',
+  trier: [ObjetLVAO['CD, DVD et jeu video']],
+  type_acteur: TypeActeurLVAO.artisan,
+  type_public: PublicLVAO.Particuliers,
+  types_service: [TypeServiceLVAO.achat_revente_professionnel],
+  url: 'url',
+  ville: 'ville',
+  distance: undefined,
+};
+
 describe('Acteurs LVAO (API test)', () => {
   const OLD_ENV = process.env;
 
@@ -32,45 +72,9 @@ describe('Acteurs LVAO (API test)', () => {
   it(`recompute_geometry `, async () => {
     // GIVEN
     process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
 
-    await lvao_usecase.upsert_acteur({
-      acheter: [ObjetLVAO.Bateau],
-      adresse: 'adresse',
-      code_postal: '12345',
-      complement_adresse: 'haha',
-      date_derniere_maj: new Date(123),
-      description: 'beaux beateaux',
-      detail_services: [
-        { action: ActionLVAO.echanger, sous_categories: [ObjetLVAO.Bateau] },
-      ],
-      donner: [ObjetLVAO['Autres PMCB']],
-      echanger: [ObjetLVAO.velo],
-      emprunter: [ObjetLVAO['Déchets de produits chimiques acides']],
-      id: '1234567',
-      labels: [LabelLVAO.ecomaison],
-      latitude: 40,
-      longitude: 2,
-      louer: [ObjetLVAO.puericulture],
-      mettreenlocation: [ObjetLVAO.palette],
-      nom: 'nom',
-      nom_commercial: 'nom_commercial',
-      preter: [ObjetLVAO.papiers_graphiques],
-      reparer: [ObjetLVAO.vaisselle],
-      reprise: 'reprise',
-      reprise_exclusif: true,
-      revendre: [ObjetLVAO['smartphone, tablette et console']],
-      siren: 'siren',
-      siret: 'siret',
-      sources: [SourceLVAO['ADEME - SINOE']],
-      sur_rdv: true,
-      telephone: '0612345678',
-      trier: [ObjetLVAO['CD, DVD et jeu video']],
-      type_acteur: TypeActeurLVAO.artisan,
-      type_public: PublicLVAO.Particuliers,
-      types_service: [TypeServiceLVAO.achat_revente_professionnel],
-      url: 'url',
-      ville: 'ville',
-    });
+    await lvao_usecase.upsert_acteur(basic_data);
 
     // WHEN
     const response = await TestUtil.POST(
@@ -80,5 +84,103 @@ describe('Acteurs LVAO (API test)', () => {
     // THEN
     expect(response.status).toEqual(201);
     expect(response.body.count).toEqual(1);
+  });
+
+  it(`GET lvao/acteurs `, async () => {
+    // GIVEN
+    process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
+
+    await lvao_usecase.upsert_acteur(basic_data);
+    await lvao_usecase.recompute_geometry();
+
+    // WHEN
+    const response = await TestUtil.GET(
+      '/lvao/acteurs?latitude=40&longitude=0&limit=10',
+    ).set('Authorization', `Bearer 123`);
+
+    // THEN
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(1);
+    expect(response.body[0]).toEqual({
+      acheter: ['Bateau'],
+      adresse: 'adresse',
+      code_postal: '12345',
+      complement_adresse: 'haha',
+      date_derniere_maj: '1970-01-01T00:00:00.123Z',
+      description: 'beaux beateaux',
+      detail_services: [
+        {
+          action: 'echanger',
+          sous_categories: ['Bateau'],
+        },
+      ],
+      donner: ['Autres PMCB'],
+      echanger: ['velo'],
+      emprunter: ['Déchets de produits chimiques acides'],
+      id: '1234567',
+      labels: ['ecomaison'],
+      latitude: 40,
+      longitude: 2,
+      louer: ['puericulture'],
+      mettreenlocation: ['palette'],
+      nom: 'nom',
+      nom_commercial: 'nom_commercial',
+      preter: ['papiers_graphiques'],
+      reparer: ['vaisselle'],
+      reprise: 'reprise',
+      reprise_exclusif: true,
+      revendre: ['smartphone, tablette et console'],
+      siren: 'siren',
+      siret: 'siret',
+      sources: ['ADEME - SINOE'],
+      sur_rdv: true,
+      telephone: '0612345678',
+      trier: ['CD, DVD et jeu video'],
+      type_acteur: 'artisan',
+      type_public: 'Particuliers',
+      types_service: ['achat_revente_professionnel'],
+      url: 'url',
+      ville: 'ville',
+      distance_metres: 170357,
+    });
+  });
+
+  it(`GET lvao/acteurs `, async () => {
+    // GIVEN
+    process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
+
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '1',
+      longitude: 0,
+      latitude: 40,
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '2',
+      longitude: 0,
+      latitude: 41,
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '3',
+      longitude: 0,
+      latitude: 42,
+    });
+    await lvao_usecase.recompute_geometry();
+
+    // WHEN
+    const response = await TestUtil.GET(
+      '/lvao/acteurs?latitude=40&longitude=0&limit=10',
+    ).set('Authorization', `Bearer 123`);
+
+    // THEN
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(3);
+    expect(response.body[0].id).toEqual('1');
+    expect(response.body[1].id).toEqual('2');
+    expect(response.body[2].id).toEqual('3');
   });
 });

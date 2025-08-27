@@ -7,6 +7,7 @@ import {
   PipeTransform,
   Post,
   Put,
+  Query,
   Request,
   UploadedFile,
   UseInterceptors,
@@ -17,6 +18,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiProperty,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { LVAOUsecase } from '../../usecase/lvao.usecase';
@@ -67,6 +69,34 @@ export class LVAOController extends GenericControler {
       count: count,
     };
   }
+  @Get('lvao/acteurs')
+  @ApiQuery({
+    name: 'longitude',
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'latitude',
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+  })
+  async liste_acteurs(
+    @Request() req,
+    @Query('longitude') longitude: number,
+    @Query('latitude') latitude: number,
+    @Query('limit') limit: number,
+  ) {
+    this.checkCronAPIProtectedEndpoint(req);
+    const result = await this.lvao_usecase.listActeurs(
+      longitude,
+      latitude,
+      limit,
+    );
+
+    return result.map((e) => ActeurLVAO_API.mapToAPI(e));
+  }
 
   @Post('lvao/acteurs/recompute_geometry')
   async recompute_geometry(@Request() req) {
@@ -98,6 +128,6 @@ export class LVAOController extends GenericControler {
     this.checkCronAPIProtectedEndpoint(req);
     console.log(file);
 
-    this.lvao_usecase.smart_load_csv_lvao_buffer(file.buffer);
+    await this.lvao_usecase.smart_load_csv_lvao_buffer(file.buffer);
   }
 }
