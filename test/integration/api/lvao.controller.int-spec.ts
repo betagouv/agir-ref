@@ -86,7 +86,7 @@ describe('Acteurs LVAO (API test)', () => {
     expect(response.body.count).toEqual(1);
   });
 
-  it(`GET lvao/acteurs `, async () => {
+  it(`GET lvao/acteurs  : data correct`, async () => {
     // GIVEN
     process.env.CRON_API_KEY = '123';
     await TestUtil.prisma.acteurLVAO.deleteMany();
@@ -146,7 +146,7 @@ describe('Acteurs LVAO (API test)', () => {
     });
   });
 
-  it(`GET lvao/acteurs `, async () => {
+  it(`GET lvao/acteurs : tri correct`, async () => {
     // GIVEN
     process.env.CRON_API_KEY = '123';
     await TestUtil.prisma.acteurLVAO.deleteMany();
@@ -182,5 +182,228 @@ describe('Acteurs LVAO (API test)', () => {
     expect(response.body[0].id).toEqual('1');
     expect(response.body[1].id).toEqual('2');
     expect(response.body[2].id).toEqual('3');
+  });
+
+  it(`GET lvao/acteurs : limit correcte`, async () => {
+    // GIVEN
+    process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
+
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '1',
+      longitude: 0,
+      latitude: 40,
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '2',
+      longitude: 0,
+      latitude: 41,
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '3',
+      longitude: 0,
+      latitude: 42,
+    });
+    await lvao_usecase.recompute_geometry();
+
+    // WHEN
+    const response = await TestUtil.GET(
+      '/lvao/acteurs?latitude=40&longitude=0&limit=1',
+    ).set('Authorization', `Bearer 123`);
+
+    // THEN
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(1);
+    expect(response.body[0].id).toEqual('1');
+  });
+  it(`GET lvao/acteurs : rayon correcte`, async () => {
+    // GIVEN
+    process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
+
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '1',
+      longitude: 0,
+      latitude: 40,
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '2',
+      longitude: 0,
+      latitude: 41,
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '3',
+      longitude: 0,
+      latitude: 42,
+    });
+    await lvao_usecase.recompute_geometry();
+
+    // WHEN
+    const response = await TestUtil.GET(
+      '/lvao/acteurs?latitude=40&longitude=0&rayon_metres=200000',
+    ).set('Authorization', `Bearer 123`);
+
+    // THEN
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(2);
+    expect(response.body[0].id).toEqual('1');
+  });
+  it(`GET lvao/acteurs : filtre actions correcte`, async () => {
+    // GIVEN
+    process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
+
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '1',
+      longitude: 0,
+      latitude: 40,
+      acheter: [ObjetLVAO.Bateau],
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '2',
+      longitude: 0,
+      latitude: 41,
+      acheter: [ObjetLVAO['CD, DVD et jeu video']],
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '3',
+      longitude: 0,
+      latitude: 42,
+      donner: [ObjetLVAO.ampoule],
+      acheter: [],
+    });
+    await lvao_usecase.recompute_geometry();
+
+    // WHEN
+    const response = await TestUtil.GET(
+      '/lvao/acteurs?latitude=40&longitude=0&action=acheter',
+    ).set('Authorization', `Bearer 123`);
+
+    // THEN
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(2);
+  });
+
+  it(`GET lvao/acteurs : filtre actions ET objet correcte`, async () => {
+    // GIVEN
+    process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
+
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '1',
+      longitude: 0,
+      latitude: 40,
+      acheter: [ObjetLVAO.Bateau],
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '2',
+      longitude: 0,
+      latitude: 41,
+      acheter: [ObjetLVAO['CD, DVD et jeu video']],
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '3',
+      longitude: 0,
+      latitude: 42,
+      acheter: [ObjetLVAO.Pneu],
+    });
+    await lvao_usecase.recompute_geometry();
+
+    // WHEN
+    const response = await TestUtil.GET(
+      '/lvao/acteurs?latitude=40&longitude=0&action=acheter&objet=Pneu',
+    ).set('Authorization', `Bearer 123`);
+
+    // THEN
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(1);
+    expect(response.body[0].id).toEqual('3');
+  });
+  it(`GET lvao/acteurs : filtre objet seul correct`, async () => {
+    // GIVEN
+    process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
+
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '1',
+      longitude: 0,
+      latitude: 40,
+      acheter: [ObjetLVAO.medicaments],
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '2',
+      longitude: 0,
+      latitude: 41,
+      louer: [ObjetLVAO.medicaments],
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '3',
+      longitude: 0,
+      latitude: 42,
+      acheter: [ObjetLVAO.Pneu],
+    });
+    await lvao_usecase.recompute_geometry();
+
+    // WHEN
+    const response = await TestUtil.GET(
+      '/lvao/acteurs?latitude=40&longitude=0&objet=medicaments',
+    ).set('Authorization', `Bearer 123`);
+
+    // THEN
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(2);
+  });
+
+  it(`GET lvao/acteurs : filtre objet seul correct - no result`, async () => {
+    // GIVEN
+    process.env.CRON_API_KEY = '123';
+    await TestUtil.prisma.acteurLVAO.deleteMany();
+
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '1',
+      longitude: 0,
+      latitude: 40,
+      acheter: [ObjetLVAO.medicaments],
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '2',
+      longitude: 0,
+      latitude: 41,
+      louer: [ObjetLVAO.medicaments],
+    });
+    await lvao_usecase.upsert_acteur({
+      ...basic_data,
+      id: '3',
+      longitude: 0,
+      latitude: 42,
+      acheter: [ObjetLVAO.Pneu],
+    });
+    await lvao_usecase.recompute_geometry();
+
+    // WHEN
+    const response = await TestUtil.GET(
+      '/lvao/acteurs?latitude=40&longitude=0&objet=jouet',
+    ).set('Authorization', `Bearer 123`);
+
+    // THEN
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(0);
   });
 });

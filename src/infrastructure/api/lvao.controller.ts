@@ -21,6 +21,8 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { ActionLVAO } from '../../domain/lvao/action_LVAO';
+import { ObjetLVAO } from '../../domain/lvao/objet_LVAO';
 import { LVAOUsecase } from '../../usecase/lvao.usecase';
 import { GenericControler } from './genericControler';
 import { ActeurLVAO_API } from './types/ActeurLVAOAPI';
@@ -73,26 +75,54 @@ export class LVAOController extends GenericControler {
   @ApiQuery({
     name: 'longitude',
     type: Number,
+    required: true,
   })
   @ApiQuery({
     name: 'latitude',
     type: Number,
+    required: true,
   })
   @ApiQuery({
     name: 'limit',
     type: Number,
+    required: true,
+    description: `Nombre max de résultats attendu`,
+  })
+  @ApiQuery({
+    name: 'rayon_metres',
+    type: Number,
+    required: false,
+    description: `distance max en mètres depuis le point pour sélectionner des résultats `,
+  })
+  @ApiQuery({
+    name: 'action',
+    enum: ActionLVAO,
+    required: false,
+    description: `Le type d'action que l'on souhaite réaliser : louer, emprunter, revendre, etc`,
+  })
+  @ApiQuery({
+    name: 'objet',
+    enum: ObjetLVAO,
+    required: false,
+    description: `Le type d'objet sur lequel on cherche à appliquer l'action : jouet, livre, etc`,
   })
   async liste_acteurs(
     @Request() req,
     @Query('longitude') longitude: number,
     @Query('latitude') latitude: number,
     @Query('limit') limit: number,
+    @Query('rayon_metres') rayon_metres: number,
+    @Query('action') action: ActionLVAO,
+    @Query('objet') objet: ObjetLVAO,
   ) {
     this.checkCronAPIProtectedEndpoint(req);
     const result = await this.lvao_usecase.listActeurs(
       longitude,
       latitude,
       limit,
+      rayon_metres,
+      action,
+      objet,
     );
 
     return result.map((e) => ActeurLVAO_API.mapToAPI(e));

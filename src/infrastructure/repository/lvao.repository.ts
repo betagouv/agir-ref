@@ -84,6 +84,9 @@ export class LVAORepository {
     longitude: number,
     latitude: number,
     limit: number,
+    rayon_metres: number,
+    action: ActionLVAO,
+    objet: ObjetLVAO,
   ): Promise<ActeurLVAO[]> {
     const fields = [
       `acheter`,
@@ -121,12 +124,85 @@ export class LVAORepository {
       `type_public`,
       `types_service`,
     ];
+    const DISTANCE_VALUE = `ST_DistanceSphere(ST_SetSRID(ST_MakePoint(${longitude}, ${latitude} ),4326), geom)`;
 
-    const result = await this.prisma.$queryRawUnsafe(
-      `SELECT ${fields.join(
-        ',',
-      )} , round(ST_DistanceSphere(ST_SetSRID(ST_MakePoint(${longitude}, ${latitude} ),4326), geom)) AS distance_metre FROM "ActeurLVAO" ORDER BY distance_metre ASC LIMIT ${limit};`,
-    );
+    let query = `SELECT ${fields.join(',')}`;
+    query += `, round(${DISTANCE_VALUE}) AS distance `;
+    query += `FROM "ActeurLVAO" `;
+    let pos_condition = 0;
+    if (rayon_metres || action || objet) {
+      query += `WHERE `;
+    }
+    if (rayon_metres) {
+      query += `${DISTANCE_VALUE} < ${rayon_metres} `;
+      pos_condition++;
+    }
+    if (action && !objet) {
+      const CONDITIONS_ACTIONS: Record<ActionLVAO, string> = {
+        acheter: `acheter <> '{}' `,
+        donner: `donner <> '{}' `,
+        echanger: `echanger <> '{}' `,
+        emprunter: `emprunter <> '{}' `,
+        louer: `louer <> '{}' `,
+        mettreenlocation: `mettreenlocation <> '{}' `,
+        preter: `preter <> '{}' `,
+        reparer: `reparer <> '{}' `,
+        revendre: `revendre <> '{}' `,
+        trier: `trier <> '{}' `,
+      };
+      const cond = CONDITIONS_ACTIONS[action];
+      if (cond) {
+        query += (pos_condition > 0 ? 'AND' : '') + cond;
+      } else {
+        return []; // on ne trouve rien ^^
+      }
+      pos_condition++;
+    }
+    if (action && objet) {
+      const CONDITIONS_ACTIONS: Record<ActionLVAO, string> = {
+        acheter: `'${objet}' = ANY(acheter) `,
+        donner: `'${objet}' = ANY(donner) `,
+        echanger: `'${objet}' = ANY(echanger) `,
+        emprunter: `'${objet}' = ANY(emprunter) `,
+        louer: `'${objet}' = ANY(louer) `,
+        mettreenlocation: `'${objet}' = ANY(mettreenlocation) `,
+        preter: `'${objet}' = ANY(preter) `,
+        reparer: `'${objet}' = ANY(reparer) `,
+        revendre: `'${objet}' = ANY(revendre) `,
+        trier: `'${objet}' = ANY(trier) `,
+      };
+      const cond = CONDITIONS_ACTIONS[action];
+      if (cond) {
+        query += (pos_condition > 0 ? 'AND' : '') + cond;
+      } else {
+        return []; // on ne trouve rien ^^
+      }
+      pos_condition++;
+    }
+    if (!action && objet) {
+      const CONDITIONS_ACTIONS: Record<ActionLVAO, string> = {
+        acheter: `'${objet}' = ANY(acheter) OR `,
+        donner: `'${objet}' = ANY(donner) OR `,
+        echanger: `'${objet}' = ANY(echanger) OR `,
+        emprunter: `'${objet}' = ANY(emprunter) OR`,
+        louer: `'${objet}' = ANY(louer) OR `,
+        mettreenlocation: `'${objet}' = ANY(mettreenlocation) OR `,
+        preter: `'${objet}' = ANY(preter) OR `,
+        reparer: `'${objet}' = ANY(reparer) OR `,
+        revendre: `'${objet}' = ANY(revendre) OR `,
+        trier: `'${objet}' = ANY(trier) `,
+      };
+
+      query += pos_condition > 0 ? 'AND' : '';
+      for (const value of Object.values(CONDITIONS_ACTIONS)) {
+        query += value;
+      }
+
+      pos_condition++;
+    }
+    query += `ORDER BY distance ASC ${limit ? 'LIMIT ' + limit : ''};`;
+
+    const result = await this.prisma.$queryRawUnsafe(query);
     return (result as ActeurLVAO_DB[]).map((u) => this.mapDBToDomain(u));
   }
 
@@ -169,7 +245,7 @@ export class LVAORepository {
       url: db.url,
       type_public: PublicLVAO[db.type_public],
       types_service: db.types_service.map((e) => TypeServiceLVAO[e]),
-      distance_metres: db['distance_metre'],
+      distance_metres: db['distance'],
     };
   }
 }
