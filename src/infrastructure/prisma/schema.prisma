@@ -48,6 +48,4 @@ model ActeurLVAO {
   geom               Unsupported("geometry(Point, 4326)")?
   created_at         DateTime                              @default(now()) @db.Timestamptz(3)
   updated_at         DateTime                              @default(now()) @updatedAt @db.Timestamptz(3)
-
-  @@index([geom], name: "location_idx", type: Gist)
 }
